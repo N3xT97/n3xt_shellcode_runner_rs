@@ -3,8 +3,6 @@
 간단하고 안전하게 Shellcode를 로드하고 실행/디버깅할 수 있는 Rust 기반 툴입니다.  
 분석 및 테스트 목적으로 설계되었으며, **VM 환경에서만 사용**하는 것을 권장합니다.
 
----
-
 ## 📜 목차
 - [🐚 N3xT Shellcode Runner](#-n3xt-shellcode-runner)
   - [📜 목차](#-목차)
@@ -19,15 +17,12 @@
   - [🔒 보안 주의사항](#-보안-주의사항)
   - [🐞 디버깅 가이드](#-디버깅-가이드)
 
----
-
 ## 🔍 프로젝트 소개
 - **목적:** Shellcode를 메모리에 로드하고 Thread 단위로 실행할 수 있는 러너입니다.
 - **플랫폼:** Windows x64/x86
 - **주요 사용 사례:**
   - 악성코드 분석 및 PoC 테스트
   - Shellcode 디버깅 및 분석 환경 제공
----
 
 ## ✨ 주요 기능
 - 파일에서 Shellcode 읽기 및 메모리 매핑
@@ -81,8 +76,6 @@ rustup target add i686-pc-windows-msvc
 cargo build --release --target i686-pc-windows-msvc
 ```
 
----
-
 ## ▶️ 사용법
 
 ```bash
@@ -105,9 +98,6 @@ n3xtSCrun32.exe -f ./example.bin -s 0 -m 0x100
 | `file_path`    | 실행할 Shellcode 바이너리 파일 경로                                                                              |
 | `start_offset` | Shellcode 시작 오프셋 (16진수 `0x` 표기 지원)                                                                    |
 | `--mem-size`   | 메모리 예약 크기. **지정하지 않으면 Shellcode 크기만큼 할당**.<br>OS 메모리 \*\*페이지 정렬(Alignment)\*\*에 맞춰 실제 할당 크기가 달라질 수 있음 |
-
-
----
 
 ## 📂 프로젝트 구조
 
