@@ -31,27 +31,43 @@
 
 ## 🖼️ 스크린샷 / 실행 예시
 ```text
-> .\n3xtSCrun32.exe -f .\example.bin -s 0    
-──────────────────────────────────────────────────────────────────────────────────────────────────────
-[*] N3xT Shellcode Runner 32
-──────────────────────────────────────────────────────────────────────────────────────────────────────
-[>] Input Parameters
+> .\n3xtSCrun32.exe -f .\example.bin -s 0 
+
++==============================================================+
+|                                                              |
+|           _____     _     ____   ____                        |
+|     _ __ |___ /_  _| |_  / ___| / ___|  _ __ _   _ _ __      |
+|    | '_ \  |_ \ \/ / __| \___ \| |     | '__| | | | '_ \     |
+|    | | | |___) >  <| |_   ___) | |___  | |  | |_| | | | |    |
+|    |_| |_|____/_/\_\\__| |____/ \____| |_|   \__,_|_| |_|    |
+|                                                              |
++==============================================================+
+[i] N3xT Shellcode Runner 32-bit
+
+── Input Parameters ─────────────────────────────────────────
+[>] Parsing CLI arguments…
+[+] CLI arguments parsed.
   Shellcode File Path          .\example.bin
   Shellcode Start Offset       0x0 (0)
   Shellcode Memory Size        None
-── Load ─────────────────────────────────────────────────────────────────────────────────────────────
-[+] 11:55:23.242 Shellcode loaded into VirtualMemory
-  Entry Address            0x7B0000 (8060928)
-  Aligned Size             4096         (0x1000)
-  Payload Size             2            (0x2)
-  Content Preview          EB FE
-── Spawn ────────────────────────────────────────────────────────────────────────────────────────────
-[+] 11:55:23.242 Thread created (suspended)
-  Thread ID                0x19BC (6588)
-── Debug ────────────────────────────────────────────────────────────────────────────────────────────
-[!] 11:55:23.243 Shellcode thread is suspended.
-[!] 11:55:23.243 Attach a debugger NOW if you want to analyze.
-[>] 11:55:23.243 Press ENTER to resume execution…
+
+── Load ─────────────────────────────────────────────────────
+[>] Loading shellcode…
+[+] Shellcode loaded.
+  Entry Address                0x5D0000 (6094848)
+  Aligned Size                 0x1000 (4096)
+  Payload Size                 0x2 (2)
+  Content Preview              EB FE
+
+── Spawn ────────────────────────────────────────────────────
+[>] Creating suspended thread…
+[+] Thread created (suspended).
+  Thread ID                    0x7008 (28680)
+
+── Debug ────────────────────────────────────────────────────
+[!] Shellcode thread is suspended.
+[!] Attach a debugger NOW if you want to analyze.
+[>] Press ENTER to resume execution…
 ````
 
 ## 🛠️ 빌드 환경
@@ -95,9 +111,9 @@ n3xtSCrun32.exe -f ./example.bin -s 0 -m 0x100
 
 | 옵션             | 설명                                                                                                    |
 | -------------- | ----------------------------------------------------------------------------------------------------- |
-| `file_path`    | 실행할 Shellcode 바이너리 파일 경로                                                                              |
-| `start_offset` | Shellcode 시작 오프셋 (16진수 `0x` 표기 지원)                                                                    |
-| `--mem-size`   | 메모리 예약 크기. **지정하지 않으면 Shellcode 크기만큼 할당**.<br>OS 메모리 \*\*페이지 정렬(Alignment)\*\*에 맞춰 실제 할당 크기가 달라질 수 있음 |
+| `-f`, `--file_path`    | 실행할 Shellcode 바이너리 파일 경로                                                                              |
+| `-s`, `--start_offset` | Shellcode 시작 오프셋 (16진수 `0x` 표기 지원)                                                                    |
+| `-m`, `--mem-size`   | 메모리 예약 크기. **지정하지 않으면 Shellcode 크기만큼 할당**.<br>OS 메모리 \*\*페이지 정렬(Alignment)\*\*에 맞춰 실제 할당 크기가 달라질 수 있음. |
 
 ## 📂 프로젝트 구조
 
