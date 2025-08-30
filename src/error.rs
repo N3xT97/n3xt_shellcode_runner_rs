@@ -9,15 +9,17 @@ pub enum ShellcodeRunnerError {
     #[error("IoError::{0}")]
     IoError(#[from] IoError),
 
-    #[error("BufferTooSmall\n> needed: {needed}, got: {got}")]
+    #[error("BufferTooSmall\n> needed : {needed:#X} ({needed}), got : {got:#X} ({got})")]
     BufferTooSmall { needed: usize, got: usize },
-    #[error("InvalidOffset\n> offset: {offset}, len: {len}")]
+    #[error("InvalidOffset\n> offset : {offset:#X} ({offset}), len : {len:#X} ({len})")]
     InvalidOffset { offset: usize, len: usize },
-    #[error("InsufficientCapacity\n> capacity: {capacity}, required: {required}")]
-    InsufficientCapacity { capacity: usize, required: usize },
+    #[error(
+        "InsufficientCapacity\n> got : {got:#X} ({got}), required : {required:#X} ({required})"
+    )]
+    InsufficientCapacity { got: usize, required: usize },
 
-    #[error("InvalidFilePath\n> path: {path}")]
+    #[error("InvalidFilePath\n> path : {path}")]
     InvalidFilePath { path: String },
-    #[error("InvalidFilePath\n> path: {path}")]
+    #[error("InvalidFilePath\n> path : {path}")]
     NotAFile { path: String },
 }

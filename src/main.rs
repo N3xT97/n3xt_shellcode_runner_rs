@@ -5,7 +5,11 @@ mod shellcode;
 mod thread;
 mod virtual_memory;
 
-use crate::{error::ShellcodeRunnerError, logger::format_size_option, runner::Runner};
+use crate::{
+    error::ShellcodeRunnerError,
+    logger::{info, key_value, ok, step, title},
+    runner::Runner,
+};
 use clap::{Parser, ValueHint};
 use std::path::PathBuf;
 
@@ -29,34 +33,47 @@ pub fn parse_usize(s: &str) -> Result<usize, String> {
 }
 
 fn print_banner() {
-    const WIDTH: usize = 102;
-    println!("{}", "─".repeat(WIDTH));
     println!(
-        "[*] N3xT Shellcode Runner {}",
-        std::mem::size_of::<usize>() * 8
+        r#"
++==============================================================+
+|                                                              |
+|           _____     _     ____   ____                        |
+|     _ __ |___ /_  _| |_  / ___| / ___|  _ __ _   _ _ __      |
+|    | '_ \  |_ \ \/ / __| \___ \| |     | '__| | | | '_ \     |
+|    | | | |___) >  <| |_   ___) | |___  | |  | |_| | | | |    |
+|    |_| |_|____/_/\_\\__| |____/ \____| |_|   \__,_|_| |_|    |
+|                                                              |
++==============================================================+"#
     );
-    println!("{}", "─".repeat(WIDTH));
+    let arch_bits = std::mem::size_of::<usize>() * 8;
+    info(&format!("N3xT Shellcode Runner {}-bit", arch_bits));
+}
+
+fn print_parameter(cli: &Cli) {
+    println!();
+    title("Input Parameters");
+    step("Parsing CLI arguments…");
+    ok("CLI arguments parsed.");
+
+    key_value("Shellcode File Path", cli.file_path.display().to_string());
+
+    let start_offset = cli.start_offset;
+    key_value(
+        "Shellcode Start Offset",
+        format!("{:#X} ({})", start_offset, start_offset),
+    );
+
+    let fmt_memory_size = cli
+        .memory_size
+        .map(|size| format!("{:#X} ({})", size, size))
+        .unwrap_or_else(|| "None".to_string());
+
+    key_value("Shellcode Memory Size", fmt_memory_size);
 }
 
 fn app() -> Result<(), ShellcodeRunnerError> {
     let cli = Cli::parse();
-
-    println!("[>] Input Parameters");
-    println!(
-        "  {:<28} {}",
-        "Shellcode File Path",
-        cli.file_path.display()
-    );
-    println!(
-        "  {:<28} {:#X} ({})",
-        "Shellcode Start Offset", cli.start_offset, cli.start_offset
-    );
-    println!(
-        "  {:<28} {}",
-        "Shellcode Memory Size",
-        format_size_option(cli.memory_size)
-    );
-
+    print_parameter(&cli);
     let runner = Runner::from_file(cli.file_path, cli.start_offset, cli.memory_size)?;
     runner.run()
 }
@@ -64,7 +81,7 @@ fn app() -> Result<(), ShellcodeRunnerError> {
 fn main() {
     print_banner();
     if let Err(e) = app() {
-        eprintln!("\x1b[31m[-] Error: {}\x1b[0m", e);
+        println!("[-] Error::{}", e);
         std::process::exit(1);
     }
 }

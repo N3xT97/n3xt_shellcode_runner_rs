@@ -1,9 +1,10 @@
+use crate::logger::{info, key_value, ok, step, title, warn};
 use crate::{
     error::ShellcodeRunnerError,
-    logger::{Level, Logger, format_size, preview_hex_bytes},
     shellcode::{Loaded, Shellcode, Unloaded},
     thread::{Thread, ThreadState},
 };
+use std::io::Write;
 use std::{fs, io, path::Path, sync::Arc};
 
 #[derive(Clone, Debug)]
@@ -31,7 +32,7 @@ impl Runner {
         if let Some(size) = memory_size {
             if size < len {
                 return Err(ShellcodeRunnerError::InsufficientCapacity {
-                    capacity: size,
+                    got: size,
                     required: len,
                 });
             }
@@ -78,43 +79,46 @@ impl Runner {
     }
 
     pub fn run(&self) -> Result<(), ShellcodeRunnerError> {
-        let log = Logger::new();
-
-        log.hr("Load");
+        println!();
+        title("Load");
+        step("Loading shellcode…");
         let sc_loaded = self.load_shellcode()?;
-        log.println(Level::Ok, "Shellcode loaded into VirtualMemory");
+        ok("Shellcode loaded.");
 
         let addr = sc_loaded.start_ptr() as usize;
-        let aligned = sc_loaded.vm().size();
-        let total = sc_loaded.bytes().len();
-        let preview = preview_hex_bytes(sc_loaded.bytes(), 16);
-
-        println!(
-            "  {:<24} {}",
-            "Entry Address",
-            format!("{:#X} ({})", addr, addr)
+        key_value("Entry Address", format!("{0:#X} ({0})", addr));
+        key_value(
+            "Aligned Size",
+            format!("{0:#X} ({0})", sc_loaded.vm().size()),
         );
-        println!("  {:<24} {}", "Aligned Size", format_size(aligned));
-        println!("  {:<24} {}", "Payload Size", format_size(total));
-        println!("  {:<24} {}", "Content Preview", preview);
+        key_value(
+            "Payload Size",
+            format!("{0:#X} ({0})", sc_loaded.bytes().len()),
+        );
+        key_value("Content Preview", preview_hex_bytes(sc_loaded.bytes(), 16));
 
-        log.hr("Spawn");
+        println!();
+        title("Spawn");
+        step("Creating suspended thread…");
         let th = Self::create_shellcode_thread_suspended(&sc_loaded)?;
-        log.println(Level::Ok, "Thread created (suspended)");
-        println!("  {:<24} {:#X} ({})", "Thread ID", th.tid(), th.tid());
+        ok("Thread created (suspended).");
+        key_value("Thread ID", format!("{:#X} ({})", th.tid(), th.tid()));
 
-        log.hr("Debug");
-        log.println(Level::Warn, "Shellcode thread is suspended.");
-        log.println(Level::Warn, "Attach a debugger NOW if you want to analyze.");
-        log.println(Level::Step, "Press ENTER to resume execution…");
+        println!();
+        title("Debug");
+        warn("Shellcode thread is suspended.");
+        warn("Attach a debugger NOW if you want to analyze.");
+        print!("[>] Press ENTER to resume execution… ");
+        io::stdout().flush().ok();
         Self::wait_enter()?;
+        ok("Resuming thread.");
 
-        log.hr("Run");
-        log.println(Level::Info, "Resuming thread");
+        println!();
+        title("Run");
+        info("Waiting for shellcode thread to exit…");
         th.resume()?;
-        log.println(Level::Info, "Waiting for shellcode thread to exit…");
         th.join()?;
-        log.println(Level::Ok, "Thread exited");
+        ok("Thread exited.");
 
         Ok(())
     }
@@ -140,4 +144,16 @@ impl Runner {
         io::stdin().read_line(&mut buffer)?;
         Ok(())
     }
+}
+
+fn preview_hex_bytes(bytes: &[u8], max: usize) -> String {
+    use std::fmt::Write;
+    let mut s = String::new();
+    for (i, b) in bytes.iter().take(max).enumerate() {
+        if i > 0 {
+            s.push(' ');
+        }
+        write!(s, "{:02X}", b).unwrap();
+    }
+    s
 }
