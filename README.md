@@ -1,10 +1,10 @@
-# 🐚 N3xT Shellcode Runner
+# 🐚 N3xT Shellcode Runner CLI
 
-Shellcode를 로드하고 실행/디버깅할 수 있는 Rust 기반 도구임.  
+Shellcode를 로드하고 실행/디버깅할 수 있는 Rust 기반 CLI 도구임.  
 분석 및 테스트 목적으로 설계됐으며, **VM 환경에서만 사용**하는 것을 권장함.
 
 ## 📜 목차
-- [🐚 N3xT Shellcode Runner](#-n3xt-shellcode-runner)
+- [🐚 N3xT Shellcode Runner CLI](#-n3xt-shellcode-runner-cli)
   - [📜 목차](#-목차)
   - [🔍 프로젝트 소개](#-프로젝트-소개)
   - [✨ 주요 기능](#-주요-기능)
@@ -29,8 +29,8 @@ Shellcode를 로드하고 실행/디버깅할 수 있는 Rust 기반 도구임.
 - HEX Preview로 Shellcode 일부 내용 출력
 
 ## 🖼️ 실행 예시
-```text
-> .\n3xtSCrun32.exe -f .\example.bin -s 0 
+```powershell
+> .\n3xtSCrun32.exe -f .\example.bin -s 0
 
 +==============================================================+
 |                                                              |
@@ -41,7 +41,7 @@ Shellcode를 로드하고 실행/디버깅할 수 있는 Rust 기반 도구임.
 |    |_| |_|____/_/\_\\__| |____/ \____| |_|   \__,_|_| |_|    |
 |                                                              |
 +==============================================================+
-[i] N3xT Shellcode Runner 32-bit
+[i] N3xT Shellcode Runner CLI 32-bit
 
 ── Input Parameters ─────────────────────────────────────────
 [>] Parsing CLI arguments…
@@ -53,7 +53,7 @@ Shellcode를 로드하고 실행/디버깅할 수 있는 Rust 기반 도구임.
 ── Load ─────────────────────────────────────────────────────
 [>] Loading shellcode…
 [+] Shellcode loaded.
-  Entry Address                0x5D0000 (6094848)
+  Entry Address                0x690000 (6881280)
   Aligned Size                 0x1000 (4096)
   Payload Size                 0x2 (2)
   Content Preview              EB FE
@@ -61,7 +61,7 @@ Shellcode를 로드하고 실행/디버깅할 수 있는 Rust 기반 도구임.
 ── Spawn ────────────────────────────────────────────────────
 [>] Creating suspended thread…
 [+] Thread created (suspended).
-  Thread ID                    0x7008 (28680)
+  Thread ID                    0x68A4 (26788)
 
 ── Debug ────────────────────────────────────────────────────
 [!] Shellcode thread is suspended.
@@ -71,7 +71,7 @@ Shellcode를 로드하고 실행/디버깅할 수 있는 Rust 기반 도구임.
 
 ## ⚙️ 설치 및 빌드
 
-```bash
+```powershell
 # 저장소 클론
 git clone https://github.com/yourname/n3xt_shellcode_runner.git
 cd n3xt_shellcode_runner
@@ -86,7 +86,7 @@ cargo build --release --target i686-pc-windows-msvc
 
 ## ▶️ 사용법
 
-```bash
+```powershell
 Usage: n3xtSCrun32.exe [OPTIONS] --file-path <FILE_PATH> --start-offset <START_OFFSET>
 
 Options:

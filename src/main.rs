@@ -50,7 +50,7 @@ fn print_banner() {
 +==============================================================+"#
     );
     let arch_bits = std::mem::size_of::<usize>() * 8;
-    info(&format!("N3xT Shellcode Runner {}-bit", arch_bits));
+    info(&format!("N3xT Shellcode Runner CLI {}-bit", arch_bits));
 }
 
 fn print_parameter(cli: &Cli) {
