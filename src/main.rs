@@ -14,7 +14,11 @@ use clap::{Parser, ValueHint};
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
-#[command(name = "n3xt_shellcode_runner", version, about = "Shellcode Runner")]
+#[command(
+    name = "n3xt_shellcode_runner_cli_rs",
+    version,
+    about = "N3xT Shellcode Runner CLI"
+)]
 struct Cli {
     #[arg(short = 'f', long = "file-path", value_hint = ValueHint::FilePath)]
     file_path: PathBuf,
