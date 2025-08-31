@@ -71,16 +71,16 @@ fn print_parameter(cli: &Cli) {
     key_value("Shellcode Memory Size", fmt_memory_size);
 }
 
-fn app() -> Result<(), ShellcodeRunnerError> {
-    let cli = Cli::parse();
-    print_parameter(&cli);
+fn app(cli: Cli) -> Result<(), ShellcodeRunnerError> {
     let runner = Runner::from_file(cli.file_path, cli.start_offset, cli.memory_size)?;
     runner.run()
 }
 
 fn main() {
+    let cli = Cli::parse();
     print_banner();
-    if let Err(e) = app() {
+    print_parameter(&cli);
+    if let Err(e) = app(cli) {
         println!("[-] Error::{}", e);
         std::process::exit(1);
     }
